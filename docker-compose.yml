@@ -11,22 +11,26 @@ networks:
     driver: bridge
 
 services:
-  collector:
+  otelcol:
     image: liatrio/liatrio-otel-collector:localdev
       #image: ghcr.io/liatrio/liatrio-otel-collector:latest-arm64
-    container_name: collector
+    container_name: otelcol
     deploy:
       resources:
         limits:
           memory: 125M
     restart: unless-stopped
     command: [ "--config=/etc/otel/config.yaml"]
-    environment:
-      - GH_PAT
-      - GH_USER
+    env_file:
+      - ./.env
+      #environment:
+      #  - GH_PAT
+      #  - GH_USER
     volumes:
       - ./src/config.yaml:/etc/otel/config.yaml
     ports:
+      - "4317"          # OTLP over gRPC receiver
+      - "4318:4318"     # OTLP over HTTP receiver
       - "9464"          # Prometheus exporter
       - "8888"          # metrics endpoint
         #logging: *logging
@@ -62,7 +66,7 @@ services:
       - --web.route-prefix=/
       - --enable-feature=exemplar-storage
     volumes:
-      - ./src/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus-config.yaml
+      - ./src/prom-config.yaml:/etc/prometheus/prometheus-config.yaml
     deploy:
       resources:
         limits:
