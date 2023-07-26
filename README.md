@@ -15,9 +15,9 @@ There is also a bonus section that shows a local development workflow for making
 
 ```mermaid
 stateDiagram-v2
-    Collector --> Github: Scrapes Data
-    Collector --> Prometheus: Pushes Data
-    Grafana --> Prometheus: Reads Data
+    Collector --> Github: Scrapes
+    Collector --> Prometheus: Pushes
+    Grafana --> Prometheus: Pulls
 ```
 
 ## Pre-requisites
