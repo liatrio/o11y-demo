@@ -12,8 +12,7 @@ networks:
 
 services:
   otelcol:
-    # image: liatrio/liatrio-otel-collector:localdev
-    image: ghcr.io/liatrio/liatrio-otel-collector:latest-amd64
+    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:latest-amd64}
     container_name: otelcol
     deploy:
       resources:
@@ -49,7 +48,7 @@ services:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
-      - "8080:${GRAFANA_SERVICE_PORT}"
+      - "3000:3000"
         #logging: *logging
 
   # Prometheus
@@ -72,6 +71,6 @@ services:
         limits:
           memory: 300M
     ports:
-      - "8081:${PROMETHEUS_SERVICE_PORT}"
+      - "9090:9090"
         #logging: *logging
 
