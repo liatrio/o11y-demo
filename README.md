@@ -22,11 +22,11 @@ stateDiagram-v2
 
 ## Pre-requisites
 
-1. The Liatrio OpenTelemetry Collector images are hosted on ghcr.io see [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic) for instructions on how to login
-2. The runtime Collector requires a GitHub Personal Access Token with the following configurations:
-   1. Can be fine-grained or classic
-   2. Contents read
-   3. Metadata read
+- The Liatrio OpenTelemetry Collector images are hosted on ghcr.io see [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic) for instructions on how to login
+- The runtime Collector requires a GitHub Personal Access Token with the following configurations:
+  - Can be fine-grained or classic
+  - Contents read
+  - Metadata read
 
 ## Getting Started
 
