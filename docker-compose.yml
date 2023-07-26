@@ -12,8 +12,8 @@ networks:
 
 services:
   otelcol:
-    image: liatrio/liatrio-otel-collector:localdev
-      #image: ghcr.io/liatrio/liatrio-otel-collector:latest-arm64
+    # image: liatrio/liatrio-otel-collector:localdev
+    image: ghcr.io/liatrio/liatrio-otel-collector:latest-amd64
     container_name: otelcol
     deploy:
       resources:
@@ -29,10 +29,10 @@ services:
     volumes:
       - ./src/config.yaml:/etc/otel/config.yaml
     ports:
-      - "4317"          # OTLP over gRPC receiver
+      - "4317:4317"          # OTLP over gRPC receiver
       - "4318:4318"     # OTLP over HTTP receiver
-      - "9464"          # Prometheus exporter
-      - "8888"          # metrics endpoint
+      - "9464:9464"          # Prometheus exporter
+      - "8888:8888"          # metrics endpoint
         #logging: *logging
 
 
@@ -49,7 +49,7 @@ services:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
-      - "${GRAFANA_SERVICE_PORT}"
+      - "8080:${GRAFANA_SERVICE_PORT}"
         #logging: *logging
 
   # Prometheus
@@ -72,6 +72,6 @@ services:
         limits:
           memory: 300M
     ports:
-      - "${PROMETHEUS_SERVICE_PORT}:${PROMETHEUS_SERVICE_PORT}"
+      - "8081:${PROMETHEUS_SERVICE_PORT}"
         #logging: *logging
 
