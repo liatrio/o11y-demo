@@ -33,7 +33,7 @@ stateDiagram-v2
 1. Clone this repo
 2. Create a `.env` file in the root of the repo, make a copy of the [example](.env.example)
 3. Run `docker compose up`
-4. Open grafana by navigating to [http://localhost:8080](http://localhost:8080)
+4. Open grafana by navigating to [http://localhost:3000](http://localhost:3000)
 5. To view the demo dashboard in Grafana go to dashboards > o11y > demo
 
 | Service | Link |
@@ -47,12 +47,13 @@ stateDiagram-v2
 
 ## Bonus Section: Development Workflow
 
-When you want to add new functionality to the collector or make changes to the existing code base you can use the following workflow to test your changes locally in a full stack environment.
+When you want to test pre-release functionality from the liatrio collector or test newly developed functionality you can use the following workflow to test your changes locally in a full stack environment.
 
 1. Clone the [liatrio-otel-collector](https://github.com/liatrio/liatrio-otel-collector) repo
-2. Run `make dockerbuild`
+2. Run `make dockerbuild` in the root of the liatrio-otel-coollector repo
 3. Follow [Getting Started](#getting-started) section but uncomment `OTEL_COLLECTOR_IMAGE` variable in the `.env` file
-4. Run `docker compose up`
+4. Run `docker compose up` in the root of this repo
+5. For a more detailed developer workflow read the docs in the [liatrio-otel-collector](https://github.com/liatrio/liatrio-otel-collector) repo
 
 ## TODO
 
@@ -64,3 +65,4 @@ When you want to add new functionality to the collector or make changes to the e
 - [ ] nail down final demo story and flow
 - [ ] add health check endpoint back in and update documentation
 - [ ] dashboard template variables
+- [ ] add section about sending metrics via the otel cli
