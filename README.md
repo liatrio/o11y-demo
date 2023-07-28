@@ -59,10 +59,7 @@ When you want to test pre-release functionality from the liatrio collector or te
 
 - [x] consider publishing collector image with arch amd64 as latest tag
   - Decision was made to just use amd64 arch in the compose file for now
-- [ ] fix panic in collector
-- [ ] add organization attribute to metrics
-- [ ] debug duplicate metric entires
-- [ ] nail down final demo story and flow
 - [ ] add health check endpoint back in and update documentation
 - [ ] dashboard template variables
-- [ ] add section about sending metrics via the otel cli
+- [ ] expand dashboard to include some more advanced expression to show off what you can do with granular data 
+- [ ] fix panic in collector
