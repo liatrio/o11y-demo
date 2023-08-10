@@ -24,7 +24,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -112,7 +111,7 @@
           },
           "editorMode": "builder",
           "expr": "git_repository_count",
-          "instant": true,
+          "instant": false,
           "key": "Q-02c41670-371f-491d-a64b-bc9b29c20bc3-0",
           "legendFormat": "{{__name__}}",
           "range": true,
@@ -209,7 +208,7 @@
           },
           "editorMode": "builder",
           "expr": "git_repository_branch_count",
-          "instant": true,
+          "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
           "legendFormat": "{{repository_name}}",
           "range": true,
@@ -303,7 +302,7 @@
           },
           "editorMode": "builder",
           "expr": "git_repository_branch_time",
-          "instant": true,
+          "instant": false,
           "key": "Q-0b7776a7-47df-4758-b3ba-2640342f1db9-0",
           "legendFormat": "{{repository_name}}/{{branch_name}}",
           "range": true,
@@ -314,7 +313,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
@@ -323,13 +322,13 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "demo",
   "uid": "6healOq4z",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
