@@ -11,10 +11,10 @@ extensions:
   #endpoint: 0.0.0.0:55679
 
 receivers:
-  #otlp:
-      #protocols:
-      #      grpc:
-      #      http:
+    otlp:
+        protocols:
+            grpc:
+            http:
 
     ## Collect own metrics based on example from OTEL Contrib Dockerfile
     ## https://github.com/open-telemetry/opentelemetry-collector-releases/blob/main/configs/otelcol-contrib.yaml
@@ -39,13 +39,25 @@ receivers:
 
 processors:
     batch:
+    resourcedetection:
+        detectors: [env]
+        timeout: 2s
+        override: false
+    resource:
+        attributes:
+        - key: cloud.availability_zone
+          value: "zone-1"
+          action: upsert
+        - key: organization.name
+          value: "Liatrio"
+          action: upsert
 
 exporters:
     logging:
         verbosity: detailed
 
     prometheus:
-      endpoint: "otelcol:9464"
+      endpoint: "${env:HOSTNAME}:9464"
       resource_to_telemetry_conversion:
         enabled: true
       enable_open_metrics: true
@@ -63,16 +75,15 @@ service:
     extensions: [basicauth/github]
     pipelines:
         metrics:
-            receivers: [gitprovider]
-            processors: []
+            receivers: [otlp, gitprovider]
+            processors: [resource, resourcedetection, batch]
             exporters: [logging, prometheus]
 
-              #traces:
-              #    receivers: [otlp]
-              #    processors: [batch]
-              #    exporters: [logging]
+        traces:
+            receivers: [otlp]
+            processors: [batch]
+            exporters: [logging]
 
     telemetry:
         logs:
             level: debug
-
