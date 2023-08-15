@@ -33,7 +33,7 @@ receivers:
             github:
                 github_org: ${env:GITHUB_ORG}
                   #search_query: "repo:liatrio/projecto11y.io"
-                search_query: "topic:o11y org:liatrio"
+                search_query: "topic:security-guild org:liatrio"
                 ## Uncomment if you want to view private authentication required
                 ## GitHub data or and decrease rate limiting.
                 auth:
