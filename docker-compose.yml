@@ -12,8 +12,7 @@ networks:
 
 services:
   otelcol0:
-    #image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.4.1-arm64}
-    image: liatrio/liatrio-otel-collector:localdev 
+    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.7.1-arm64}
     container_name: otelcol0
     deploy:
       resources:
@@ -36,8 +35,7 @@ services:
         #logging: *logging
 
   otelcol1:
-    #image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.4.1-arm64}
-    image: liatrio/liatrio-otel-collector:localdev 
+    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.7.1-arm64}
     container_name: otelcol1
     deploy:
       resources:
