@@ -12,7 +12,7 @@ networks:
 
 services:
   otelcol0:
-    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.4.1-arm64}
+    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.7.1-arm64}
     container_name: otelcol0
     deploy:
       resources:
@@ -34,28 +34,28 @@ services:
       - "8888:8888"          # metrics endpoint
         #logging: *logging
 
-  # otelcol1:
-  #   image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.4.1-arm64}
-  #   container_name: otelcol1
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 125M
-  #   restart: unless-stopped
-  #   command: [ "--config=/etc/otel/config.yaml"]
-  #   env_file:
-  #     - ./liatrio.env
-  #     #environment:
-  #     #  - GH_PAT
-  #     #  - GH_USER
-  #   volumes:
-  #     - ./src/config.yaml:/etc/otel/config.yaml
-  #   ports:
-  #     - "3317:4317"          # OTLP over gRPC receiver
-  #     - "3318:4318"     # OTLP over HTTP receiver
-  #     - "8464:9464"          # Prometheus exporter
-  #     - "7888:8888"          # metrics endpoint
-  #       #logging: *logging
+  otelcol1:
+    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.7.1-arm64}
+    container_name: otelcol1
+    deploy:
+      resources:
+        limits:
+          memory: 125M
+    restart: unless-stopped
+    command: [ "--config=/etc/otel/config.yaml"]
+    env_file:
+      - ./liatrio.env
+      #environment:
+      #  - GH_PAT
+      #  - GH_USER
+    volumes:
+      - ./src/liatrio-config.yaml:/etc/otel/config.yaml
+    ports:
+      - "3317:4317"          # OTLP over gRPC receiver
+      - "3318:4318"     # OTLP over HTTP receiver
+      - "8464:9464"          # Prometheus exporter
+      - "7888:8888"          # metrics endpoint
+        #logging: *logging
 
 
   # Grafana
