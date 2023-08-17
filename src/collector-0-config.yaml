@@ -21,7 +21,7 @@ receivers:
     prometheus:
         config:
             scrape_configs:
-                - job_name: liatrio-otel-collector
+                - job_name: "${env:GH_ORG}-otel-collector"
                   scrape_interval: 10s
                   static_configs:
                       - targets: [0.0.0.0:8888]
@@ -31,9 +31,10 @@ receivers:
         collection_interval: 60s
         scrapers:
             github:
-                github_org: ${env:GITHUB_ORG}
-                  #search_query: "repo:liatrio/projecto11y.io"
-                search_query: "topic:security-guild org:liatrio"
+                github_org: "${env:GH_ORG}"
+                # search_query: "repo:liatrio/projecto11y.io"
+                # search_query: "topic:security-guild org:liatrio"
+                search_query: "${env:GH_SEARCH_QUERY}"
                 ## Uncomment if you want to view private authentication required
                 ## GitHub data or and decrease rate limiting.
                 auth:
@@ -41,17 +42,14 @@ receivers:
 
 processors:
     batch:
-      #resourcedetection:
-      #    detectors: [env]
-      #    timeout: 2s
-      #    override: false
+    resourcedetection:
+        detectors: [env]
+        timeout: 2s
+        override: false
     resource:
         attributes:
-        - key: cloud.availability_zone
-          value: "zone-1"
-          action: upsert
         - key: organization.name
-          value: "Liatrio"
+          value: "${env:GH_ORG}"
           action: upsert
 
 exporters:
@@ -78,7 +76,7 @@ service:
     pipelines:
         metrics:
             receivers: [otlp, gitprovider]
-            processors: [resource]
+            processors: [resource,resourcedetection]
             exporters: [logging, prometheus]
 
         traces:
