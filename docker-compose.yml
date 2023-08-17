@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     command: [ "--config=/etc/otel/config.yaml"]
     env_file:
-      - ./.env
+      - ./collector-0.env
       #environment:
       #  - GH_PAT
       #  - GH_USER
@@ -44,7 +44,7 @@ services:
   #   restart: unless-stopped
   #   command: [ "--config=/etc/otel/config.yaml"]
   #   env_file:
-  #     - ./liatrio.env
+  #     - ./collector-1.env
   #     #environment:
   #     #  - GH_PAT
   #     #  - GH_USER
