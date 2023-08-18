@@ -11,6 +11,7 @@ networks:
     driver: bridge
 
 services:
+
   otelcol0:
     image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.7.1-arm64}
     container_name: otelcol0
@@ -21,7 +22,7 @@ services:
     restart: unless-stopped
     command: [ "--config=/etc/otel/config.yaml"]
     env_file:
-      - ./collector-0.env
+      - ./.collector-0.env
       #environment:
       #  - GH_PAT
       #  - GH_USER
@@ -44,7 +45,7 @@ services:
   #   restart: unless-stopped
   #   command: [ "--config=/etc/otel/config.yaml"]
   #   env_file:
-  #     - ./collector-1.env
+  #     - ./.collector-1.env
   #     #environment:
   #     #  - GH_PAT
   #     #  - GH_USER

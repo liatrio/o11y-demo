@@ -39,6 +39,19 @@ receivers:
                 ## GitHub data or and decrease rate limiting.
                 auth:
                     authenticator: basicauth/github
+    gitprovider/liatrio:
+        initial_delay: 1s
+        collection_interval: 60s
+        scrapers:
+            github:
+                github_org: "liatrio"
+                # search_query: "repo:liatrio/projecto11y.io"
+                search_query: "topic:security-guild org:liatrio"
+                # search_query: "${env:GH_SEARCH_QUERY}"
+                ## Uncomment if you want to view private authentication required
+                ## GitHub data or and decrease rate limiting.
+                auth:
+                    authenticator: basicauth/github
 
 processors:
     batch:
@@ -50,6 +63,11 @@ processors:
         attributes:
         - key: organization.name
           value: "${env:GH_ORG}"
+          action: upsert
+    resource/liatrio:
+        attributes:
+        - key: organization.name
+          value: "liatrio"
           action: upsert
 
 exporters:
@@ -76,7 +94,11 @@ service:
     pipelines:
         metrics:
             receivers: [otlp, gitprovider]
-            processors: [resource,resourcedetection]
+            processors: [resource]
+            exporters: [logging, prometheus]
+        metrics/liatrio:
+            receivers: [otlp, gitprovider/liatrio]
+            processors: [resource/liatrio]
             exporters: [logging, prometheus]
 
         traces:
