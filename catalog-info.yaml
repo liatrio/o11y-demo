@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: o11y demo
+  name: o11y-demo
   # description: Add a useful description before merging
 
   # Annotations Docs: https://backstage.io/docs/features/software-catalog/well-known-annotations
