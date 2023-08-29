@@ -28,7 +28,7 @@ receivers:
 
   gitprovider:
     initial_delay: 1s
-    collection_interval: 60s
+    collection_interval: 300s
     scrapers:
       github:
         github_org: "${env:GH_ORG}"
@@ -38,9 +38,10 @@ receivers:
         metrics:
           git.repository.contributor.count:
             enabled: true
+  
   gitprovider/liatrio:
     initial_delay: 1s
-    collection_interval: 60s
+    collection_interval: 300s
     scrapers:
       github:
         github_org: "liatrio"
