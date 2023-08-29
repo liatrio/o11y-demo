@@ -47,8 +47,12 @@
                 "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 7
               }
             ]
           }
@@ -82,10 +86,10 @@
             "uid": "gitprovider-metrics"
           },
           "editorMode": "builder",
-          "expr": "avg by(organization_name) (git_repository_branch_count{organization_name=~\"$organization\"})",
+          "expr": "avg by(organization_name) (git_repository_branch_count{organization_name=~\"$organization\", repository_name=~\"$repo\"})",
           "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
-          "legendFormat": "{{repository_name}}",
+          "legendFormat": "{{organization_name}}",
           "range": true,
           "refId": "A"
         }
@@ -112,8 +116,12 @@
                 "value": null
               },
               {
+                "color": "yellow",
+                "value": 200
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 500
               }
             ]
           }
@@ -148,7 +156,7 @@
             "uid": "gitprovider-metrics"
           },
           "editorMode": "builder",
-          "expr": "avg by(repository_name) (git_repository_branch_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}) > 0 / 24",
+          "expr": "avg by(repository_name) (git_repository_branch_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}) / 24",
           "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
           "legendFormat": "{{repository_name}}",
@@ -157,7 +165,6 @@
         }
       ],
       "title": "Average Branch Age Per Repo In Days",
-      "transparent": true,
       "type": "gauge"
     },
     {
@@ -219,7 +226,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 24,
+        "w": 12,
         "x": 0,
         "y": 8
       },
@@ -315,10 +322,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 17
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 8
       },
       "id": 2,
       "options": {
@@ -343,7 +350,7 @@
           "expr": "git_repository_branch_count{organization_name=~\"$organization\", repository_name=~\"$repo\"}",
           "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
-          "legendFormat": "{{repository_name}}",
+          "legendFormat": "{{organization_name}}/{{repository_name}}",
           "range": true,
           "refId": "A"
         }
@@ -396,7 +403,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -408,10 +416,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
-        "w": 24,
+        "h": 9,
+        "w": 12,
         "x": 0,
-        "y": 27
+        "y": 17
       },
       "id": 1,
       "options": {
@@ -436,7 +444,7 @@
           "expr": "git_repository_branch_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}",
           "instant": false,
           "key": "Q-0b7776a7-47df-4758-b3ba-2640342f1db9-0",
-          "legendFormat": "{{repository_name}}/{{branch_name}}",
+          "legendFormat": "{{organization_name}}/{{repository_name}}/{{branch_name}}",
           "range": true,
           "refId": "A"
         }
@@ -489,7 +497,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -502,9 +511,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 39
+        "w": 12,
+        "x": 12,
+        "y": 17
       },
       "id": 3,
       "options": {
@@ -529,7 +538,7 @@
           "expr": "git_repository_count{organization_name=~\"$organization\"}",
           "instant": false,
           "key": "Q-02c41670-371f-491d-a64b-bc9b29c20bc3-0",
-          "legendFormat": "{{__name__}}",
+          "legendFormat": "{{organization_name}}",
           "range": true,
           "refId": "A"
         }
@@ -547,7 +556,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -578,7 +587,7 @@
       {
         "allValue": "",
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -615,7 +624,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "demo",
-  "uid": "eolhuGgSz",
-  "version": 10,
+  "uid": "p8-fPWzIz",
+  "version": 8,
   "weekStart": ""
 }
