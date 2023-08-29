@@ -56,7 +56,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 3,
         "x": 0,
         "y": 0
@@ -81,7 +81,7 @@
             "type": "prometheus",
             "uid": "gitprovider-metrics"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "expr": "avg by(organization_name) (git_repository_branch_count{organization_name=~\"$organization\"})",
           "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
@@ -121,7 +121,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 21,
         "x": 3,
         "y": 0
@@ -148,7 +148,7 @@
             "uid": "gitprovider-metrics"
           },
           "editorMode": "builder",
-          "expr": "avg by(repository_name) (git_repository_branch_time{organization_name=~\"$organization\"}) > 0 / 24",
+          "expr": "avg by(repository_name) (git_repository_branch_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}) > 0 / 24",
           "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
           "legendFormat": "{{repository_name}}",
@@ -221,7 +221,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 8,
       "options": {
@@ -242,12 +242,11 @@
             "type": "prometheus",
             "uid": "gitprovider-metrics"
           },
-          "editorMode": "code",
-          "exemplar": false,
+          "editorMode": "builder",
           "expr": "git_repository_contributor_count{organization_name=~\"$organization\", repository_name=~\"$repo\"}",
           "instant": false,
-          "key": "Q-1cea67ec-cfd5-4a18-a2d5-00dedef46dd4-0",
-          "legendFormat": "{{repository_name}}",
+          "key": "Q-08537169-6de5-41f1-b2d6-693fc148edad-0",
+          "legendFormat": "{{organization_name}}/{{repository_name}}",
           "range": true,
           "refId": "A"
         }
@@ -319,7 +318,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 17
       },
       "id": 2,
       "options": {
@@ -340,7 +339,7 @@
             "type": "prometheus",
             "uid": "gitprovider-metrics"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "expr": "git_repository_branch_count{organization_name=~\"$organization\", repository_name=~\"$repo\"}",
           "instant": false,
           "key": "Q-12be8e8c-5d52-4ee5-8ea8-7b4a5dfbac4f-0",
@@ -397,8 +396,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -413,7 +411,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 27
       },
       "id": 1,
       "options": {
@@ -434,7 +432,7 @@
             "type": "prometheus",
             "uid": "gitprovider-metrics"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "expr": "git_repository_branch_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}",
           "instant": false,
           "key": "Q-0b7776a7-47df-4758-b3ba-2640342f1db9-0",
@@ -491,8 +489,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -507,7 +504,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 39
       },
       "id": 3,
       "options": {
@@ -528,7 +525,7 @@
             "type": "prometheus",
             "uid": "gitprovider-metrics"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "expr": "git_repository_count{organization_name=~\"$organization\"}",
           "instant": false,
           "key": "Q-02c41670-371f-491d-a64b-bc9b29c20bc3-0",
@@ -550,7 +547,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -581,7 +578,7 @@
       {
         "allValue": "",
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -618,7 +615,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "demo",
-  "uid": "dG5p2ZzIz",
-  "version": 1,
+  "uid": "eolhuGgSz",
+  "version": 10,
   "weekStart": ""
 }

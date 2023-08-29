@@ -13,7 +13,7 @@ networks:
 services:
 
   otelcol0:
-    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.9.0-arm64}
+    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.10.0-arm64}
     container_name: otelcol0
     deploy:
       resources:
