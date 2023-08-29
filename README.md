@@ -31,7 +31,7 @@ stateDiagram-v2
 ## Getting Started
 
 1. Clone this repo
-2. Create a `.env` file in the root of the repo, make a copy of the [example](.env.example)
+2. Create a `.env` file in the root of the repo, make a copy of the [example](.collector.env.example)
 3. Run `docker compose up`
 4. Open grafana by navigating to [http://localhost:3000](http://localhost:3000)
 5. To view the demo dashboard in Grafana go to dashboards > o11y > demo
@@ -60,5 +60,5 @@ When you want to test pre-release functionality from the liatrio collector or te
 - [x] consider publishing collector image with arch amd64 as latest tag
   - Decision was made to just use amd64 arch in the compose file for now
 - [ ] add health check endpoint back in and update documentation
-- [ ] dashboard template variables
+- [x] dashboard template variables
 - [ ] expand dashboard to include some more advanced expression to show off what you can do with granular data

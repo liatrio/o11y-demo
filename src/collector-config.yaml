@@ -1,0 +1,111 @@
+---
+extensions:
+  basicauth/github:
+    client_auth:
+      username: ${env:GH_USER}
+      password: ${env:GH_PAT}
+  #health_check:
+  #pprof:
+  #endpoint: 0.0.0.0:1777
+  #zpages:
+  #endpoint: 0.0.0.0:55679
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+  ## Collect own metrics based on example from OTEL Contrib Dockerfile
+  ## https://github.com/open-telemetry/opentelemetry-collector-releases/blob/main/configs/otelcol-contrib.yaml
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "${env:GH_ORG}-otel-collector"
+          scrape_interval: 10s
+          static_configs:
+            - targets: [0.0.0.0:8888]
+
+  gitprovider:
+    initial_delay: 1s
+    collection_interval: 60s
+    scrapers:
+      github:
+        github_org: "${env:GH_ORG}"
+        # search_query: "repo:liatrio/projecto11y.io"
+        # search_query: "topic:security-guild org:liatrio"
+        search_query: "${env:GH_SEARCH_QUERY}"
+        ## Uncomment if you want to view private authentication required
+        ## GitHub data or and decrease rate limiting.
+        auth:
+          authenticator: basicauth/github
+  gitprovider/liatrio:
+    initial_delay: 1s
+    collection_interval: 60s
+    scrapers:
+      github:
+        github_org: "liatrio"
+        # search_query: "repo:liatrio/projecto11y.io"
+        search_query: "type:public org:liatrio"
+        # search_query: "${env:GH_SEARCH_QUERY}"
+        ## Uncomment if you want to view private authentication required
+        ## GitHub data or and decrease rate limiting.
+        auth:
+          authenticator: basicauth/github
+
+processors:
+  batch:
+  resourcedetection:
+    detectors: [env]
+    timeout: 2s
+    override: false
+  resource:
+    attributes:
+      - key: organization.name
+        value: "${env:GH_ORG}"
+        action: upsert
+  resource/liatrio:
+    attributes:
+      - key: organization.name
+        value: "liatrio"
+        action: upsert
+
+exporters:
+  logging:
+    verbosity: detailed
+
+  prometheus:
+    endpoint: "${env:HOSTNAME}:9464"
+    resource_to_telemetry_conversion:
+      enabled: true
+    enable_open_metrics: true
+
+  ## Uncomment if you want to use OTLP exportation to Grafana cloud
+  ## and update with your region
+  #otlphttp:
+  #  auth:
+  #    authenticator: basicauth/grafana
+  #  endpoint: https://otlp-gateway-prod-us-central-0.grafana.net/otlp
+
+service:
+  ## Add basicauth/* if you want to use basic auth extensions
+  ##extensions: [health_check, pprof, zpages, basicauth/github]
+  extensions: [basicauth/github]
+  pipelines:
+    metrics:
+      receivers: [otlp, gitprovider]
+      processors: [resource]
+      exporters: [logging, prometheus]
+    metrics/liatrio:
+      receivers: [otlp, gitprovider/liatrio]
+      processors: [resource/liatrio]
+      exporters: [logging, prometheus]
+
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging]
+
+  telemetry:
+    logs:
+      level: debug
