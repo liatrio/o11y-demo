@@ -4,11 +4,11 @@ extensions:
     client_auth:
       username: ${env:GH_USER}
       password: ${env:GH_PAT}
-  #health_check:
-  #pprof:
-  #endpoint: 0.0.0.0:1777
-  #zpages:
-  #endpoint: 0.0.0.0:55679
+  # health_check:
+  # pprof:
+  # endpoint: 0.0.0.0:1777
+  # zpages:
+  # endpoint: 0.0.0.0:55679
 
 receivers:
   otlp:
@@ -32,26 +32,26 @@ receivers:
     scrapers:
       github:
         github_org: "${env:GH_ORG}"
-        # search_query: "repo:liatrio/projecto11y.io"
-        # search_query: "topic:security-guild org:liatrio"
         search_query: "${env:GH_SEARCH_QUERY}"
-        ## Uncomment if you want to view private authentication required
-        ## GitHub data or and decrease rate limiting.
         auth:
           authenticator: basicauth/github
+        metrics:
+          git.repository.contributor.count:
+            enabled: true
   gitprovider/liatrio:
     initial_delay: 1s
     collection_interval: 60s
     scrapers:
       github:
         github_org: "liatrio"
+        # search_query: "topic:security-guild org:liatrio"
         # search_query: "repo:liatrio/projecto11y.io"
         search_query: "type:public org:liatrio"
-        # search_query: "${env:GH_SEARCH_QUERY}"
-        ## Uncomment if you want to view private authentication required
-        ## GitHub data or and decrease rate limiting.
         auth:
           authenticator: basicauth/github
+        metrics:
+          git.repository.contributor.count:
+            enabled: true
 
 processors:
   batch:
@@ -92,10 +92,12 @@ service:
   ##extensions: [health_check, pprof, zpages, basicauth/github]
   extensions: [basicauth/github]
   pipelines:
+
     metrics:
       receivers: [otlp, gitprovider]
       processors: [resource]
       exporters: [logging, prometheus]
+    
     metrics/liatrio:
       receivers: [otlp, gitprovider/liatrio]
       processors: [resource/liatrio]
