@@ -11,7 +11,7 @@ There is also a bonus section that shows a local development workflow for making
   - [Bonus Section: Development Workflow](#bonus-section-development-workflow)
   - [TODO](#todo)
 
-## Architecture 
+## Architecture
 
 ```mermaid
 stateDiagram-v2
@@ -38,12 +38,12 @@ stateDiagram-v2
 
 | Service | Link |
 | --- | --- |
-| Grafana | http://localhost:3000 |
-| Prometheus | http://localhost:9090 |
-| Collector gRPC Receiver | http://localhost:4317 |
-| Collector HTTP Receiver | http://localhost:4318 |
-| Collector Prometheus Metrics | http://localhost:9464/metrics |
-| Collector Health Check | http://localhost:8888/metrics |
+| Grafana | [http://localhost:3000](http://localhost:3000) |
+| Prometheus | [http://localhost:9090](http://localhost:9090) |
+| Collector gRPC Receiver | [http://localhost:4317](http://localhost:4317) |
+| Collector HTTP Receiver | [http://localhost:4318](http://localhost:4318) |
+| Collector Prometheus Metrics | [http://localhost:9464/metrics](http://localhost:9464/metrics) |
+| Collector Health Check | [http://localhost:8888/metrics](http://localhost:8888/metrics) |
 
 ## Bonus Section: Development Workflow
 
