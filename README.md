@@ -23,18 +23,32 @@ stateDiagram-v2
 ## Pre-requisites
 
 - The Liatrio OpenTelemetry Collector images are hosted on ghcr.io see [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic) for instructions on how to login
-- The runtime Collector requires a GitHub Personal Access Token with the following configurations:
-  - Can be fine-grained or classic
-  - Contents read
-  - Metadata read
+- The runtime Collector requires a GitHub Personal Access Token with the following configurations (Can be fine-grained or classic):
+  - repo:All
+  - read:packages
+  - read:org
+  - read:user
+  - read:enterprise
+  - read:project
+
+?> This is a classic token configuration, fine grained might be easier
 
 ## Getting Started
 
-1. Clone this repo
-2. Create a `.env` file in the root of the repo, make a copy of the [example](.collector.env.example)
-3. Run `docker compose up`
-4. Open grafana by navigating to [http://localhost:3000](http://localhost:3000)
-5. To view the demo dashboard in Grafana go to dashboards > o11y > demo
+1. Clone this repo and navigate to the root directory
+2. Create a `.collector.env` file in the root of the repo, make a copy of the [example](.collector.env.example)
+3. Make sure organization is set to liatrio, unless you want to specify another
+4. Run `docker compose up`
+5. Open grafana by navigating to [http://localhost:3000](http://localhost:3000)
+6. To view the demo dashboard in Grafana go to dashboards > o11y > demo
+
+?> You will need to wait a moment for Grafana to recieve data from Prometheus, the page will look like this until enough data has been recieved:
+
+![No Data](img/no-data.png)
+
+Once the data has been recieved it should look like this:
+
+![Lots of Data](img/more-data.png)
 
 | Service | Link |
 | --- | --- |

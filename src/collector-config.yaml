@@ -38,10 +38,10 @@ receivers:
         metrics:
           git.repository.contributor.count:
             enabled: true
-  
+
   gitprovider/liatrio:
     initial_delay: 1s
-    collection_interval: 300s
+    collection_interval: 30s
     scrapers:
       github:
         github_org: "liatrio"
@@ -80,6 +80,7 @@ exporters:
     resource_to_telemetry_conversion:
       enabled: true
     enable_open_metrics: true
+    add_metric_suffixes: false
 
   ## Uncomment if you want to use OTLP exportation to Grafana cloud
   ## and update with your region
@@ -98,7 +99,7 @@ service:
       receivers: [otlp, gitprovider]
       processors: [resource]
       exporters: [logging, prometheus]
-    
+
     metrics/liatrio:
       receivers: [otlp, gitprovider/liatrio]
       processors: [resource/liatrio]
