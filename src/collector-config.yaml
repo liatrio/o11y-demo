@@ -41,7 +41,7 @@ receivers:
 
   gitprovider/liatrio:
     initial_delay: 1s
-    collection_interval: 30s
+    collection_interval: 300s
     scrapers:
       github:
         github_org: "liatrio"
