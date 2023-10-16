@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: O11y-Demo
+  description: This is a self contained demo of the Liatrio OpenTelemetry Collector and Grafana using Prometheus as the data source. The intent of this demo is to show how to use the Liatrio OpenTelemetry Collector to scrape data from GitHub and expose it to Grafana for visualization. This demo is not intended to be used in production.
+  annotations:
+    github.com/project-slug: 'liatrio/o11y-demo'
+    backstage.io/techdocs-ref: 'url:https://github.com/liatrio/o11y-demo'
+  tags:
+    - prometheus
+    - grafana
+    - docker
+    - otel
+    - o11y
+    - observability
+    - demo
+    - opensource
+  links:
+    - url: https://github.com/liatrio/o11y-demo
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: demo
+  owner: o11y-owners
+  system: o11y-demo
