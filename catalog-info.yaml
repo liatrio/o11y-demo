@@ -1,33 +1,22 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: o11y-demo
-  # description: Add a useful description before merging
-
-  # Annotations Docs: https://backstage.io/docs/features/software-catalog/well-known-annotations
+  name: O11y-Demo
+  description: This is a self contained demo of the Liatrio OpenTelemetry Collector and Grafana using Prometheus as the data source. The intent of this demo is to show how to use the Liatrio OpenTelemetry Collector to scrape data from GitHub and expose it to Grafana for visualization. This demo is not intended to be used in production.
   annotations:
-    github.com/project-slug: liatrio/o11y-demo
-
-  # Tags Docs: https://backstage.io/docs/features/software-catalog/descriptor-format/#metadatatags-optional
-  # tags:
-  #   - example
-  #   - tag
-
-  # Links Docs: https://backstage.io/docs/features/software-catalog/descriptor-format/#links-optional
-  # links:
-  #   - url: https://example.com/user
-  #     title: Examples Users
-  #     icon: user
-  #   - url: https://example.com/group
-  #     title: Example Group
-  #     icon: group
-
+    github.com/project-slug: 'liatrio/o11y-demo'
+    backstage.io/techdocs-ref: 'url:https://github.com/liatrio/o11y-demo'
+  tags:
+    - prometheus
+    - grafana
+    - docker
+    - otel
+    - o11y
+  links:
+    - url: https://github.com/liatrio/o11y-demo
+      icon: dashboard
 spec:
-  # https://backstage.io/docs/features/software-catalog/descriptor-format/#spectype-required
   type: service
-  # Review lifecycle and pick one of the three that make the most sense.
-  # https://backstage.io/docs/features/software-catalog/descriptor-format/#speclifecycle-required
-  lifecycle: production
-  # Please update to include the GitHub Team name tied to this project.
-  # https://backstage.io/docs/features/software-catalog/descriptor-format/#specowner-required
-  owner: liatrio-team-members
+  lifecycle: demo
+  owner: o11y-owners
+  system: o11y-demo
