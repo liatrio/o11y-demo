@@ -12,6 +12,9 @@ metadata:
     - docker
     - otel
     - o11y
+    - observability
+    - demo
+    - opensource
   links:
     - url: https://github.com/liatrio/o11y-demo
       icon: dashboard
