@@ -22,4 +22,4 @@ spec:
   type: service
   lifecycle: demo
   owner: o11y-owners
-  system: o11y-demo
+  system: o11y
