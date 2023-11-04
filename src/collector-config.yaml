@@ -39,21 +39,6 @@ receivers:
           git.repository.contributor.count:
             enabled: true
 
-  gitprovider/liatrio:
-    initial_delay: 1s
-    collection_interval: 300s
-    scrapers:
-      github:
-        github_org: "liatrio"
-        # search_query: "topic:security-guild org:liatrio"
-        # search_query: "repo:liatrio/projecto11y.io"
-        search_query: "type:public org:liatrio"
-        auth:
-          authenticator: basicauth/github
-        metrics:
-          git.repository.contributor.count:
-            enabled: true
-
 processors:
   batch:
   resourcedetection:
@@ -65,12 +50,6 @@ processors:
       - key: organization.name
         value: "${env:GH_ORG}"
         action: upsert
-  resource/liatrio:
-    attributes:
-      - key: organization.name
-        value: "liatrio"
-        action: upsert
-
 exporters:
   logging:
     verbosity: detailed
@@ -98,11 +77,6 @@ service:
     metrics:
       receivers: [otlp, gitprovider]
       processors: [resource]
-      exporters: [logging, prometheus]
-
-    metrics/liatrio:
-      receivers: [otlp, gitprovider/liatrio]
-      processors: [resource/liatrio]
       exporters: [logging, prometheus]
 
     traces:
