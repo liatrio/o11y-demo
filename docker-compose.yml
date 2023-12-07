@@ -13,13 +13,13 @@ networks:
 services:
 
   otelcol0:
-    image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.23.0-arm64}
-    # image: liatrio/liatrio-otel-collector:localdev
+    #image: ${OTEL_COLLECTOR_IMAGE:-ghcr.io/liatrio/liatrio-otel-collector:0.23.0-arm64}
+    image: liatrio/liatrio-otel-collector:localdev
     container_name: otelcol0
     deploy:
       resources:
         limits:
-          memory: 125M
+          memory: 300M
     restart: unless-stopped
     command: [ "--config=/etc/otel/config.yaml"]
     env_file:
@@ -34,11 +34,12 @@ services:
       - "4318:4318"     # OTLP over HTTP receiver
       - "9464:9464"          # Prometheus exporter
       - "8888:8888"          # metrics endpoint
+      - "8088:8088"          # webhookreceiver endpoint
         #logging: *logging
 
   # Grafana
   grafana:
-    image: grafana/grafana:9.4.7
+    image: grafana/grafana:10.2.0
     container_name: grafana
     deploy:
       resources:
@@ -73,4 +74,16 @@ services:
     ports:
       - "9090:9090"
         #logging: *logging
+  
+  loki:
+    image: grafana/loki:2.9.2
+    volumes: 
+      - ./src/grafana/loki-config.yaml:/etc/loki/local-config.yaml
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
 
