@@ -55,6 +55,7 @@ processors:
           - set(attributes["status"], attributes["deployment_status"]["state"]) where attributes["deployment_status"]["state"] != nil
           - set(attributes["user"], attributes["deployment"]["creator"]["login"]) where attributes["deployment"]["creator"]["login"] != nil
           - set(attributes["repository.name"], attributes["repository"]["name"]) where attributes["repository"]["name"] != nil
+          - set(attributes["repository.owner"], attributes["repository"]["owner"]["login"]) where attributes["repository"]["owner"]["login"] != nil
           - set(attributes["action"], attributes["action"]) where attributes["action"] != nil
 
   transform/issues:
@@ -66,17 +67,21 @@ processors:
           - set(attributes["created_at"], attributes["issue"]["created_at"]) where attributes["issue"]["created_at"] != nil
           - set(attributes["closed_at"], attributes["issue"]["closed_at"]) where attributes["issue"]["closed_at"] != nil
           - set(attributes["action"], attributes["action"]) where attributes["action"] != nil
+          - set(attributes["issue_labels"], attributes["issue"]["labels"]) where attributes["issue"]["labels"] != nil
+          - set(attributes["repository.owner"], attributes["repository"]["owner"]["login"]) where attributes["repository"]["owner"]["login"] != nil
+          - set(attributes["title"], attributes["issue"]["title"]) where attributes["issue"]["title"] != nil
+
 
   attributes/deployments:
     actions:
       - action: upsert
         key: loki.attribute.labels
-        value: repository.name, status, user, name, created_at
+        value: repository.name, status, user, name, created_at, repository.owner
   attributes/issues:
     actions:
       - action: upsert
         key: loki.attribute.labels
-        value: repository.name, action, created_at, closed_at
+        value: repository.name, action, created_at, closed_at, repository.owner, issue_labels
   filter/deployments:
     logs:
       include:
@@ -91,6 +96,11 @@ processors:
         record_attributes:
           - key: action
             value: "reopened|labeled"
+      include:
+        match_type: regexp
+        record_attributes:
+          - key: issues_labels
+            value: ".*\"name\":\"incident\".*"
 
   batch:
   resourcedetection:

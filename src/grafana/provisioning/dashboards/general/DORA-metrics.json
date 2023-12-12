@@ -22,6 +22,17 @@
   "liveNow": false,
   "panels": [
     {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 23,
+      "title": "Change Failure Rate",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "loki",
         "uid": "loki"
@@ -53,7 +64,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 18,
       "options": {
@@ -78,12 +89,12 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status=~\"success|failure\"} |= ``",
+          "expr": "{status=~\"success|failure\", repository_name=~\"$repo\"} |= ``",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Change Failure Rate",
+      "title": " ",
       "transformations": [
         {
           "id": "extractFields",
@@ -213,6 +224,17 @@
       "type": "stat"
     },
     {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 22,
+      "title": "Change Lead Time",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "gitprovider-metrics"
@@ -241,15 +263,14 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 9,
-        "x": 8,
-        "y": 0
+        "w": 8,
+        "x": 0,
+        "y": 9
       },
       "id": 19,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -258,7 +279,8 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
       "pluginVersion": "10.2.0",
       "targets": [
@@ -268,8 +290,8 @@
             "uid": "gitprovider-metrics"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "git_repository_pull_request_deployment_time{repository_name=\"deployment-test\"}",
+          "editorMode": "code",
+          "expr": "avg by(repository_name) (git_repository_pull_request_deployment_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}) / 24",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -279,32 +301,90 @@
           "useBackend": false
         }
       ],
-      "title": "Mean Lead Time to Deploy",
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "reduce",
-          "options": {
-            "reducers": [
-              "mean"
+      "title": "Average Time To Deploy Per Repo In Days",
+      "transformations": [],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gitprovider-metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
             ]
           }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 9
+      },
+      "id": 21,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gitprovider-metrics"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "quantile(0.5, git_repository_pull_request_deployment_time{organization_name=~\"$organization\", repository_name=~\"$repo\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "type": "stat"
+      "title": "Median Time To Deploy Per Repo In Days",
+      "transformations": [],
+      "type": "gauge"
     },
     {
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 16
       },
       "id": 15,
-      "title": "Time to Resolve",
+      "title": "Time to Restore Service",
       "type": "row"
     },
     {
@@ -343,11 +423,11 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 8,
         "x": 0,
-        "y": 8
+        "y": 17
       },
-      "id": 13,
+      "id": 24,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -367,89 +447,19 @@
             "type": "loki",
             "uid": "loki"
           },
-          "editorMode": "builder",
-          "expr": "{repository_name=\"deployment-test\"} |= `incident`",
+          "editorMode": "code",
+          "expr": "{repository_name=~\"$repo\",repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Issue Logs",
+      "title": "Logs",
       "transformations": [
         {
           "id": "extractFields",
           "options": {
-            "format": "json",
-            "source": "Line"
-          }
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "json",
-            "source": "attributes"
-          }
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "json",
-            "source": "issue"
-          }
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "json",
-            "source": "body"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Line": true,
-              "Time": true,
-              "action": false,
-              "active_lock_reason": true,
-              "assignee": true,
-              "assignees": true,
-              "attributes": true,
-              "author_association": true,
-              "body": true,
-              "body 2": true,
-              "comments": true,
-              "comments_url": true,
-              "created_at": false,
-              "events_url": true,
-              "html_url": true,
-              "id": false,
-              "id 2": true,
-              "installation": true,
-              "instrumentation_scope": true,
-              "issue": true,
-              "issue 2": false,
-              "labels": true,
-              "labels 2": true,
-              "labels_url": true,
-              "locked": true,
-              "milestone": true,
-              "node_id": true,
-              "number": true,
-              "performed_via_github_app": true,
-              "reactions": true,
-              "repository": true,
-              "repository_url": true,
-              "sender": true,
-              "state": true,
-              "state_reason": true,
-              "timeline_url": true,
-              "tsNs": true,
-              "updated_at": true,
-              "url": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
+            "format": "kvp",
+            "source": "labels"
           }
         },
         {
@@ -466,7 +476,7 @@
                 "fieldName": "action"
               }
             ],
-            "match": "any",
+            "match": "all",
             "type": "include"
           }
         },
@@ -537,20 +547,29 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "Line": true,
+              "Time": true,
               "action": true,
+              "exporter": true,
               "id": true,
+              "issue_labels": true,
+              "labels": true,
+              "name": true,
+              "status": true,
               "time to resolve (ms)": true,
-              "time to resolve (s)": true
+              "time to resolve (s)": true,
+              "tsNs": true,
+              "user": true
             },
             "indexByName": {
-              "action": 4,
-              "closed_at": 3,
-              "created_at": 2,
-              "id": 1,
+              "action": 2,
+              "closed_at": 1,
+              "created_at": 0,
+              "repository_name": 5,
+              "repository_owner": 6,
               "time to resolve (hrs)": 7,
-              "time to resolve (ms)": 5,
-              "time to resolve (s)": 6,
-              "title": 0
+              "time to resolve (ms)": 3,
+              "time to resolve (s)": 4
             },
             "renameByName": {
               "title": "Issue"
@@ -589,25 +608,22 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 8
+        "w": 8,
+        "x": 8,
+        "y": 17
       },
-      "id": 14,
+      "id": 25,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": [],
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
-        "wideLayout": true
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
       "pluginVersion": "10.2.0",
       "targets": [
@@ -616,89 +632,19 @@
             "type": "loki",
             "uid": "loki"
           },
-          "editorMode": "builder",
-          "expr": "{repository_name=\"deployment-test\"} |= `incident`",
+          "editorMode": "code",
+          "expr": "{repository_name=~\"$repo\",repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Mean time to resolve incident (hours)",
+      "title": "Logs",
       "transformations": [
         {
           "id": "extractFields",
           "options": {
-            "format": "json",
-            "source": "Line"
-          }
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "json",
-            "source": "attributes"
-          }
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "json",
-            "source": "issue"
-          }
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "json",
-            "source": "body"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Line": true,
-              "Time": true,
-              "action": false,
-              "active_lock_reason": true,
-              "assignee": true,
-              "assignees": true,
-              "attributes": true,
-              "author_association": true,
-              "body": true,
-              "body 2": true,
-              "comments": true,
-              "comments_url": true,
-              "created_at": false,
-              "events_url": true,
-              "html_url": true,
-              "id": false,
-              "id 2": true,
-              "installation": true,
-              "instrumentation_scope": true,
-              "issue": true,
-              "issue 2": false,
-              "labels": true,
-              "labels 2": true,
-              "labels_url": true,
-              "locked": true,
-              "milestone": true,
-              "node_id": true,
-              "number": true,
-              "performed_via_github_app": true,
-              "reactions": true,
-              "repository": true,
-              "repository_url": true,
-              "sender": true,
-              "state": true,
-              "state_reason": true,
-              "timeline_url": true,
-              "tsNs": true,
-              "updated_at": true,
-              "url": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
+            "format": "kvp",
+            "source": "labels"
           }
         },
         {
@@ -715,7 +661,7 @@
                 "fieldName": "action"
               }
             ],
-            "match": "any",
+            "match": "all",
             "type": "include"
           }
         },
@@ -786,20 +732,34 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "Line": true,
+              "Time": true,
               "action": true,
+              "closed_at": true,
+              "created_at": true,
+              "exporter": true,
               "id": true,
+              "issue_labels": true,
+              "labels": true,
+              "name": true,
+              "repository_name": true,
+              "repository_owner": true,
+              "status": true,
+              "time to resolve (hrs)": false,
               "time to resolve (ms)": true,
-              "time to resolve (s)": true
+              "time to resolve (s)": true,
+              "tsNs": true,
+              "user": true
             },
             "indexByName": {
-              "action": 4,
-              "closed_at": 3,
-              "created_at": 2,
-              "id": 1,
+              "action": 2,
+              "closed_at": 1,
+              "created_at": 0,
+              "repository_name": 5,
+              "repository_owner": 6,
               "time to resolve (hrs)": 7,
-              "time to resolve (ms)": 5,
-              "time to resolve (s)": 6,
-              "title": 0
+              "time to resolve (ms)": 3,
+              "time to resolve (s)": 4
             },
             "renameByName": {
               "title": "Issue"
@@ -809,26 +769,23 @@
         {
           "id": "reduce",
           "options": {
-            "includeTimeField": false,
-            "labelsToFields": false,
-            "mode": "reduceFields",
             "reducers": [
               "mean"
             ]
           }
         }
       ],
-      "type": "stat"
+      "type": "gauge"
     },
     {
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 25
       },
       "id": 11,
-      "title": "All Deployments",
+      "title": "Deployment Frequency",
       "type": "row"
     },
     {
@@ -869,7 +826,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 17
+        "y": 26
       },
       "id": 17,
       "options": {
@@ -892,7 +849,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status=~\"success|failure\"} |= ``",
+          "expr": "{status!=\"\",repository_name=~\"$repo\",repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -991,7 +948,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 17
+        "y": 26
       },
       "id": 16,
       "options": {
@@ -1014,12 +971,12 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status=~\"success|failure\", created_at != ``} |= ``",
+          "expr": "{status!=\"\", repository_name=~\"$repo\", repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Deployment Count",
+      "title": "Deployments Over Time",
       "transformations": [
         {
           "id": "extractFields",
@@ -1141,7 +1098,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 17
+        "y": 26
       },
       "id": 7,
       "options": {
@@ -1166,887 +1123,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status=~\"success|failure\", created_at != ``} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Frequency",
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "destinationType": "time",
-                "targetField": "created_at"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": false,
-                "field": "created_at"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "created_at",
-              "operator": "+"
-            },
-            "index": {
-              "asPercentile": false
-            },
-            "mode": "index",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "count",
-            "binary": {
-              "left": "Row",
-              "operator": "+",
-              "right": "1"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Row": true,
-              "exporter": true,
-              "name": true,
-              "repository_name": true,
-              "status": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "gauge"
-    },
-    {
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 24
-      },
-      "id": 10,
-      "title": "Failed Deployments",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 25
-      },
-      "id": 5,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "builder",
-          "expr": "{status=\"failure\"} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Logs",
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "exporter": true,
-              "name": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 25
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.2.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "builder",
-          "expr": "{status=\"failure\"} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Deployment Count",
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "destinationType": "time",
-                "targetField": "created_at"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": false,
-                "field": "created_at"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "created_at",
-              "operator": "+"
-            },
-            "index": {
-              "asPercentile": false
-            },
-            "mode": "index",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "count",
-            "binary": {
-              "left": "Row",
-              "operator": "+",
-              "right": "1"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Row": true,
-              "exporter": true,
-              "name": true,
-              "repository_name": true,
-              "status": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 25
-      },
-      "id": 8,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "builder",
-          "expr": "{status=\"failure\", created_at != ``} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Frequency",
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "destinationType": "time",
-                "targetField": "created_at"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": false,
-                "field": "created_at"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "created_at",
-              "operator": "+"
-            },
-            "index": {
-              "asPercentile": false
-            },
-            "mode": "index",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "count",
-            "binary": {
-              "left": "Row",
-              "operator": "+",
-              "right": "1"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Row": true,
-              "exporter": true,
-              "name": true,
-              "repository_name": true,
-              "status": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "gauge"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 32
-      },
-      "id": 9,
-      "panels": [],
-      "title": "Succesful Deployments",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 33
-      },
-      "id": 1,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "builder",
-          "expr": "{status=\"success\"} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Logs",
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "exporter": true,
-              "name": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 33
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.2.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "code",
-          "expr": "{status=\"success\", created_at != ``} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Deployment Count",
-      "transformations": [
-        {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "destinationType": "time",
-                "targetField": "created_at"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": false,
-                "field": "created_at"
-              }
-            ]
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "created_at",
-              "operator": "+"
-            },
-            "index": {
-              "asPercentile": false
-            },
-            "mode": "index",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "count",
-            "binary": {
-              "left": "Row",
-              "operator": "+",
-              "right": "1"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Row": true,
-              "exporter": true,
-              "name": true,
-              "repository_name": true,
-              "status": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 33
-      },
-      "id": 6,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "code",
-          "expr": "{status=\"success\", created_at != ``} |= ``",
+          "expr": "{status!=\"\", repository_name=~\"$repo\", repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -2143,11 +1220,74 @@
       "type": "gauge"
     }
   ],
-  "refresh": "5s",
+  "refresh": "auto",
   "schemaVersion": 38,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": [
+            "rhoofard"
+          ],
+          "value": [
+            "rhoofard"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "gitprovider-metrics"
+        },
+        "definition": "label_values(organization_name)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "organization",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(organization_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": [
+            "deployment-test"
+          ],
+          "value": [
+            "deployment-test"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "gitprovider-metrics"
+        },
+        "definition": "label_values({organization_name=\"$organization\"},repository_name)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "repo",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values({organization_name=\"$organization\"},repository_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
   },
   "time": {
     "from": "now-3h",
