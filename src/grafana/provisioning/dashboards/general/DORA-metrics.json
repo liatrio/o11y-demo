@@ -66,7 +66,7 @@
         "x": 0,
         "y": 1
       },
-      "id": 18,
+      "id": 26,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -89,136 +89,41 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status=~\"success|failure\", repository_name=~\"$repo\"} |= ``",
-          "queryType": "range",
+          "expr": "count by (name) (count_over_time({status!=\"\", repository_name=~\"$repo\"}[$__auto])) ",
+          "hide": true,
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "editorMode": "code",
+          "expr": "count by (action) (count_over_time({repository_name=~\"$repo\", repository_owner=~\"$organization\", action=\"closed\"}[$__auto]))",
+          "hide": true,
+          "queryType": "instant",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "($B/$A)*100",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
         }
       ],
       "title": " ",
       "transformations": [
         {
-          "id": "extractFields",
-          "options": {
-            "format": "kvp",
-            "jsonPaths": [
-              {
-                "path": ""
-              }
-            ],
-            "keepTime": false,
-            "replace": true,
-            "source": "labels"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "exporter": true,
-              "name": true,
-              "user": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "status"
-              ],
-              "reducer": "count"
-            }
-          }
-        },
-        {
-          "id": "groupBy",
-          "options": {
-            "fields": {
-              "Count": {
-                "aggregations": [
-                  "count"
-                ],
-                "operation": "aggregate"
-              },
-              "status": {
-                "aggregations": [],
-                "operation": "groupby"
-              }
-            }
-          }
-        },
-        {
           "disabled": true,
-          "id": "groupingToMatrix",
-          "options": {
-            "columnField": "status",
-            "emptyValue": "empty",
-            "rowField": "Count (count)",
-            "valueField": "Count (count)"
-          }
-        },
-        {
-          "id": "rowsToFields",
+          "id": "merge",
           "options": {}
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "failure",
-              "operator": "+",
-              "right": "success"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "failure",
-              "operator": "/",
-              "right": "failure + success"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "failure / failure + success",
-              "operator": "*",
-              "right": "100"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "failure": true,
-              "failure + success": true,
-              "failure / failure + success": true,
-              "success": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
         }
       ],
       "type": "stat"
@@ -362,7 +267,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "quantile(0.5, git_repository_pull_request_deployment_time{organization_name=~\"$organization\", repository_name=~\"$repo\"})",
+          "expr": "quantile(0.5, git_repository_pull_request_deployment_time{organization_name=~\"$organization\", repository_name=~\"$repo\"}) /24",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -638,7 +543,7 @@
           "refId": "A"
         }
       ],
-      "title": "Logs",
+      "title": "Average Time to Restore Service",
       "transformations": [
         {
           "id": "extractFields",
@@ -1220,7 +1125,7 @@
       "type": "gauge"
     }
   ],
-  "refresh": "auto",
+  "refresh": "5s",
   "schemaVersion": 38,
   "tags": [],
   "templating": {
@@ -1290,13 +1195,13 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "DORA stuff",
   "uid": "bddfc8a2-3a88-4468-8862-d1dff2a92460",
-  "version": 1,
+  "version": 4,
   "weekStart": ""
 }
