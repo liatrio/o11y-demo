@@ -87,4 +87,3 @@ When you want to test pre-release functionality from the liatrio collector or te
 - [ ] add health check endpoint back in and update documentation
 - [x] dashboard template variables
 - [ ] expand dashboard to include some more advanced expression to show off what you can do with granular data
-- [ ] correct % failure rate in DORA dashboard to be the % of incident issues opened / total deployments
