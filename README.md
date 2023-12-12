@@ -9,6 +9,7 @@ There is also a bonus section that shows a local development workflow for making
   - [Pre-requisites](#pre-requisites)
   - [Getting Started](#getting-started)
   - [Bonus Section: Development Workflow](#bonus-section-development-workflow)
+  - [Bonus Section: DORA Metrics with GitHub Event Logs](#bonus-section-dora-metrics-with-github-event-logs)
   - [TODO](#todo)
 
 ## Architecture
@@ -75,10 +76,11 @@ When you want to test pre-release functionality from the liatrio collector or te
 5. For a more detailed developer workflow read the docs in the [liatrio-otel-collector](https://github.com/liatrio/liatrio-otel-collector) repo
 
 ## Bonus Section: DORA Metrics with GitHub Event Logs
+
 1. Create a GitHub App with permissions for `Issues` and `Deployments` then have it subscribed to `Issues` and `Deployment Status` events while leaving webhooks disabled for now. This can be done by navigating to Settings->Developer Settings->GitHub Apps.
 2. Using [Ngrok](https://ngrok.com) or another tool to forward traffic from your GitHub App to your local machine, set up forwarding to `http://localhost:8088/` which is going to be the endpoint for our webhook receiver should it be running locally.
 3. This is going to give you a web address which we will be using as our webhook url in our GitHub App.  Be sure to add `/events` to that address as that is the path that the webhook event receiver will be expecting these event logs at by default.
-4. Now you should be all set to start ingesting GitHub event logs.  This setup reads in data about Deployments which can be created through a workflow that both specifies an environment as well as uses programs like [Terraform](https://www.terraform.io) to deploy code remotely. It is also expecting you to use GitHub Issues to keep track of things like production outages, interuptions in service, etc. So when one of those does occur you can create an Issue with the `incident` tag and that will be our start time and when said issue is resolved, you close it giving us an end time.
+4. Now you should be all set to start ingesting GitHub event logs.  This setup reads in data about Deployments which can be created through a workflow that both specifies an environment as well as uses programs like [Terraform](https://www.terraform.io) to deploy code remotely. It is also expecting you to use GitHub Issues to keep track of things like production outages, interuptions in service, etc. So when one of those does occur you can create an Issue with the `incident` tag and that will be our start time and when said issue is resolved, you close it giving us an end time.  Only one issue of this type should be created for all problems associated with the latest deployment.
 
 ## TODO
 
