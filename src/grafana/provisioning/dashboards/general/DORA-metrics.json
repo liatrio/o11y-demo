@@ -89,7 +89,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "count by (name) (count_over_time({status!=\"\", repository_name=~\"$repo\"}[$__auto])) ",
+          "expr": "count by (name) (count_over_time({status=\"success\", repository_name=~\"$repo\"}[$__auto])) ",
           "hide": true,
           "legendFormat": "",
           "queryType": "instant",
@@ -467,14 +467,25 @@
               "user": true
             },
             "indexByName": {
-              "action": 2,
-              "closed_at": 1,
-              "created_at": 0,
-              "repository_name": 5,
-              "repository_owner": 6,
-              "time to resolve (hrs)": 7,
-              "time to resolve (ms)": 3,
-              "time to resolve (s)": 4
+              "Line": 11,
+              "Time": 10,
+              "action": 3,
+              "closed_at": 2,
+              "created_at": 1,
+              "exporter": 14,
+              "id": 13,
+              "issue_labels": 18,
+              "labels": 9,
+              "name": 15,
+              "repository_name": 6,
+              "repository_owner": 7,
+              "status": 16,
+              "time to resolve (hrs)": 8,
+              "time to resolve (ms)": 4,
+              "time to resolve (s)": 5,
+              "title": 0,
+              "tsNs": 12,
+              "user": 17
             },
             "renameByName": {
               "title": "Issue"
@@ -653,6 +664,7 @@
               "time to resolve (hrs)": false,
               "time to resolve (ms)": true,
               "time to resolve (s)": true,
+              "title": true,
               "tsNs": true,
               "user": true
             },
@@ -754,7 +766,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status!=\"\",repository_name=~\"$repo\",repository_owner=~\"$organization\"}",
+          "expr": "{status=\"success\",repository_name=~\"$repo\",repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -780,7 +792,8 @@
           "options": {
             "excludeByName": {
               "exporter": true,
-              "name": true,
+              "name": false,
+              "status": true,
               "user": true
             },
             "indexByName": {},
@@ -876,7 +889,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status!=\"\", repository_name=~\"$repo\", repository_owner=~\"$organization\"}",
+          "expr": "{status=\"success\", repository_name=~\"$repo\", repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -1028,7 +1041,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{status!=\"\", repository_name=~\"$repo\", repository_owner=~\"$organization\"}",
+          "expr": "{status=\"success\", repository_name=~\"$repo\", repository_owner=~\"$organization\"}",
           "queryType": "range",
           "refId": "A"
         }
@@ -1202,6 +1215,6 @@
   "timezone": "",
   "title": "DORA stuff",
   "uid": "bddfc8a2-3a88-4468-8862-d1dff2a92460",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }

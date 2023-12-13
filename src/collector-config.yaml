@@ -81,7 +81,7 @@ processors:
     actions:
       - action: upsert
         key: loki.attribute.labels
-        value: repository.name, action, created_at, closed_at, repository.owner, issue_labels
+        value: repository.name, action, created_at, closed_at, repository.owner, issue_labels, title
   filter/deployments:
     logs:
       include:
@@ -96,11 +96,7 @@ processors:
         record_attributes:
           - key: action
             value: "reopened|labeled"
-      # include:
-      #   match_type: regexp
-      #   record_attributes:
-      #     - key: issues_labels
-      #       value: ".*\"name\":\"incident\".*"
+
 
   batch:
   resourcedetection:
