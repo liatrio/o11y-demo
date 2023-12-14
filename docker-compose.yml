@@ -44,7 +44,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 100M
+          memory: 300M
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/

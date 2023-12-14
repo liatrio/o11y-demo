@@ -53,10 +53,24 @@ processors:
           - set(attributes["name"], attributes["workflow"]["name"]) where attributes["workflow"]["name"] != nil
           - set(attributes["created_at"], attributes["deployment"]["created_at"]) where attributes["deployment"]["created_at"] != nil
           - set(attributes["status"], attributes["deployment_status"]["state"]) where attributes["deployment_status"]["state"] != nil
+          - set(attributes["sha"], attributes["deployment"]["sha"]) where attributes["deployment"]["sha"] != nil
           - set(attributes["user"], attributes["deployment"]["creator"]["login"]) where attributes["deployment"]["creator"]["login"] != nil
           - set(attributes["repository.name"], attributes["repository"]["name"]) where attributes["repository"]["name"] != nil
           - set(attributes["repository.owner"], attributes["repository"]["owner"]["login"]) where attributes["repository"]["owner"]["login"] != nil
           - set(attributes["action"], attributes["action"]) where attributes["action"] != nil
+          
+  transform/pull_requests:
+    log_statements:
+      - context: log
+        statements:
+          - merge_maps(attributes, ParseJSON(body), "upsert")
+          - set(attributes["title"], attributes["pull_request"]["title"]) where attributes["pull_request"]["title"] != nil
+          - set(attributes["merged_at"], attributes["pull_request"]["merged_at"]) where attributes["pull_request"]["merged_at"] != nil
+          - set(attributes["sha"], attributes["pull_request"]["merge_commit_sha"]) where attributes["pull_request"]["merge_commit_sha"] != nil
+          - set(attributes["repository.name"], attributes["repository"]["name"]) where attributes["repository"]["name"] != nil
+          - set(attributes["repository.owner"], attributes["repository"]["owner"]["login"]) where attributes["repository"]["owner"]["login"] != nil
+          - set(attributes["action"], attributes["action"]) where attributes["action"] != nil
+
 
   transform/issues:
     log_statements:
@@ -76,12 +90,17 @@ processors:
     actions:
       - action: upsert
         key: loki.attribute.labels
-        value: repository.name, status, user, name, created_at, repository.owner
+        value: repository.name, status, user, name, created_at, repository.owner, sha
   attributes/issues:
     actions:
       - action: upsert
         key: loki.attribute.labels
         value: repository.name, action, created_at, closed_at, repository.owner, issue_labels, title
+  attributes/pull_requests:
+    actions:
+      - action: upsert
+        key: loki.attribute.labels
+        value: repository.name, action, merged_at, sha, repository.owner, title
   filter/deployments:
     logs:
       include:
@@ -89,6 +108,13 @@ processors:
         record_attributes:
           - key: status
             value: "success|failure"
+  filter/pull_requests:
+    logs:
+      include:
+        match_type: strict
+        record_attributes:
+          - key: action
+            value: "closed"
   filter/issues:
     logs:
       exclude:
@@ -138,6 +164,11 @@ service:
     logs/deployments:
       receivers: [webhookevent]
       processors: [transform/deployments, attributes/deployments, filter/deployments]
+      exporters: [loki]
+    
+    logs/pull_requests:
+      receivers: [webhookevent]
+      processors: [transform/pull_requests, attributes/pull_requests, filter/pull_requests]
       exporters: [loki]
 
     logs/issues:
