@@ -79,14 +79,18 @@ When you want to test pre-release functionality from the liatrio collector or te
 ## Bonus Section: DORA Metrics with GitHub Event Logs
 
 1. Create a GitHub App with permissions for `Issues` `Deployments` and `Pull requests` then have it subscribed to `Issues` `Deployment Status` and `Pull request` events while leaving webhooks disabled for now. This can be done by navigating to Settings->Developer Settings->GitHub Apps.
-![github app settings path](img/new-github-app.png)
-![github app permissions](img/github-app-permissions.png)
-![github app event subscriptions](img/github-app-events.png)
 
-2. Using [Ngrok](https://ngrok.com) or another tool to forward traffic from your GitHub App to your local machine, set up forwarding to `http://localhost:8088/` which is going to be the endpoint for our webhook receiver should it be running locally.
-3. This is going to give you a web address which we will be using as our webhook url in our GitHub App.  Be sure to add `/events` to that address as that is the path that the webhook event receiver will be expecting these event logs at by default.
-4. Uncomment the relevant code in the `collector-config.yaml` and `docker-compose` file in order to setup the tools required for this.
-5. Now you should be all set to start ingesting GitHub event logs. 
+<img src="img/new-github-app.png" width="1000">
+
+GitHub App Permissions             |  Github App Event Subscriptions
+:-------------------------:|:-------------------------:
+<img src="img/github-app-permissions.png" width="480">  |   <img src="img/github-app-events.png" width="480">
+
+
+3. Using [Ngrok](https://ngrok.com) or another tool to forward traffic from your GitHub App to your local machine, set up forwarding to `http://localhost:8088/` which is going to be the endpoint for our webhook receiver should it be running locally.
+4. This is going to give you a web address which we will be using as our webhook url in our GitHub App.  Be sure to add `/events` to that address as that is the path that the webhook event receiver will be expecting these event logs at by default.
+5. Uncomment the relevant code in the `collector-config.yaml` and `docker-compose` file in order to setup the tools required for this.
+6. Now you should be all set to start ingesting GitHub event logs. 
 
 #### Requirements
 1. Use GitHub Issues to track outages/interuptions in service caused by a recent deployment
