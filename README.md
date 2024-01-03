@@ -90,7 +90,10 @@ GitHub App Permissions             |  Github App Event Subscriptions
 3. Using [Ngrok](https://ngrok.com) or another tool to forward traffic from your GitHub App to your local machine, set up forwarding to `http://localhost:8088/` which is going to be the endpoint for our webhook receiver should it be running locally.
 4. This is going to give you a web address which we will be using as our webhook url in our GitHub App.  Be sure to add `/events` to that address as that is the path that the webhook event receiver will be expecting these event logs at by default.
 5. Uncomment the relevant code in the `collector-config.yaml` and `docker-compose` file in order to setup the tools required for this.
-6. Now you should be all set to start ingesting GitHub event logs. 
+6. Clone the [liatrio-otel-collector](https://github.com/liatrio/liatrio-otel-collector) repo
+8. Run `make dockerbuild` in the root of the liatrio-otel-coollector repo
+9. Run `docker compose up` in the root of this repo
+10. Now you should be all set to start ingesting GitHub event logs. 
 
 #### Requirements
 1. Use GitHub Issues to track outages/interuptions in service caused by a recent deployment

@@ -101,7 +101,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "count by (action) (count_over_time({repository_name=~\"$repo\", repository_owner=~\"$organization\", action=\"closed\"}[$__auto]))",
+          "expr": "count by (action) (count_over_time({repository_name=~\"$repo\", repository_owner=~\"$organization\", action=\"closed\", issue_labels!=\"\"}[$__auto]))",
           "hide": true,
           "queryType": "instant",
           "refId": "B"
@@ -1850,6 +1850,6 @@
   "timezone": "",
   "title": "DORA stuff",
   "uid": "bddfc8a2-3a88-4468-8862-d1dff2a92460",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
