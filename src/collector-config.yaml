@@ -47,7 +47,7 @@ receivers:
   #   path: "/events"
   #   health_path: "/healthcheck"
 
-# processors:
+processors:
 #   transform/deployments:
 #     log_statements:
 #       - context: log
@@ -137,6 +137,7 @@ receivers:
       - key: organization.name
         value: "${env:GH_ORG}"
         action: upsert
+        
 exporters:
   logging:
     verbosity: detailed
