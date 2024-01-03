@@ -91,7 +91,6 @@ GitHub App Permissions             |  Github App Event Subscriptions
 4. This is going to give you a web address which we will be using as our webhook url in our GitHub App.  Be sure to add `/events` to that address as that is the path that the webhook event receiver will be expecting these event logs at by default.
 5. Uncomment the relevant code in the `collector-config.yaml` and `docker-compose` file in order to setup the tools required for this.
 6. Clone the [liatrio-otel-collector](https://github.com/liatrio/liatrio-otel-collector) repo
-7. Update the `manifest.yml` in the `config` directory to include the `lokiexporter`, `webhookeventreceiver`, and `attributesprocessor`
 8. Run `make dockerbuild` in the root of the liatrio-otel-coollector repo
 9. Run `docker compose up` in the root of this repo
 10. Now you should be all set to start ingesting GitHub event logs. 
